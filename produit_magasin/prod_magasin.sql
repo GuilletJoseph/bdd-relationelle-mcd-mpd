@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 16 nov. 2022 à 22:51
+-- Généré le : jeu. 17 nov. 2022 à 09:08
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.1.6
 
@@ -43,7 +43,9 @@ CREATE TABLE `magasin` (
 CREATE TABLE `produit` (
   `ID` int(11) NOT NULL,
   `REFERENCE` int(11) NOT NULL,
-  `LIBELLE` varchar(50) NOT NULL
+  `LIBELLE` varchar(50) NOT NULL,
+  `ID_STOCK` int(11) NOT NULL,
+  `QUANTITE` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -65,8 +67,7 @@ CREATE TABLE `produit_magasin` (
 
 CREATE TABLE `stock` (
   `ID` int(11) NOT NULL,
-  `ID_PRODUIT` int(11) NOT NULL,
-  `QUANTITE` int(11) DEFAULT NULL
+  `NOM` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -83,7 +84,8 @@ ALTER TABLE `magasin`
 -- Index pour la table `produit`
 --
 ALTER TABLE `produit`
-  ADD PRIMARY KEY (`ID`);
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `ID_STOCK` (`ID_STOCK`);
 
 --
 -- Index pour la table `produit_magasin`
@@ -96,8 +98,7 @@ ALTER TABLE `produit_magasin`
 -- Index pour la table `stock`
 --
 ALTER TABLE `stock`
-  ADD PRIMARY KEY (`ID`),
-  ADD KEY `ID_PRODUIT` (`ID_PRODUIT`);
+  ADD PRIMARY KEY (`ID`);
 
 --
 -- AUTO_INCREMENT pour les tables déchargées
@@ -126,17 +127,17 @@ ALTER TABLE `stock`
 --
 
 --
+-- Contraintes pour la table `produit`
+--
+ALTER TABLE `produit`
+  ADD CONSTRAINT `produit_ibfk_1` FOREIGN KEY (`ID_STOCK`) REFERENCES `stock` (`ID`);
+
+--
 -- Contraintes pour la table `produit_magasin`
 --
 ALTER TABLE `produit_magasin`
   ADD CONSTRAINT `produit_magasin_ibfk_1` FOREIGN KEY (`ID_PRODUIT`) REFERENCES `produit` (`ID`),
   ADD CONSTRAINT `produit_magasin_ibfk_2` FOREIGN KEY (`ID_MAGASIN`) REFERENCES `magasin` (`ID`);
-
---
--- Contraintes pour la table `stock`
---
-ALTER TABLE `stock`
-  ADD CONSTRAINT `stock_ibfk_1` FOREIGN KEY (`ID_PRODUIT`) REFERENCES `produit` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
